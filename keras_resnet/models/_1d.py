@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+Vincenzo Dentamaro
 keras_resnet.models._1d
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -65,20 +66,17 @@ class ResNet1D(keras.Model):
         *args,
         **kwargs
     ):
-        if keras.backend.image_data_format() == "channels_last":
-            axis = 3
-        else:
-            axis = 1
+        axis = 1
 
         if numerical_names is None:
             numerical_names = [True] * len(blocks)
 
         x = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")(inputs)
-        x = keras.layers.Conv1D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1")(x)
+        x = keras.layers.Conv1D(64, 7, strides=2, use_bias=False, name="conv1")(x)
         x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
         x = keras.layers.Activation("relu", name="conv1_relu")(x)
-        x = keras.layers.MaxPooling1D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
-
+        x = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")(x)
+        
         features = 64
 
         outputs = []
@@ -94,7 +92,7 @@ class ResNet1D(keras.Model):
                 )(x)
 
             features *= 2
-
+  
             outputs.append(x)
 
         if include_top:
@@ -105,8 +103,11 @@ class ResNet1D(keras.Model):
 
             super(ResNet1D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
         else:
+            x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
+            x = keras.layers.Dense(1, activation='linear', name="regressor")(x)
+
             # Else output each stages features
-            super(ResNet1D, self).__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
+            super(ResNet1D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
 
 
 class ResNet1D18(ResNet1D):
