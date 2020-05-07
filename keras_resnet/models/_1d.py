@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+Vincenzo Dentamaro
 keras_resnet.models._1d
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -11,10 +12,72 @@ import keras.backend
 import keras.layers
 import keras.models
 import keras.regularizers
-
-import keras_resnet.blocks
+import tensorflow as tf
 import keras_resnet.layers
+from keras.layers.core import Lambda
+def audioencoder2_(x):
+   
+   out_neurons = x.shape.as_list()[-1]
 
+   print('Out Neurons '+str(out_neurons))
+   branch_a = keras.layers.Conv1D(int(128), 1,activation='relu',strides=2)(x)
+   
+   branch_b = keras.layers.Conv1D(int(128), 1,activation='relu')(x)
+   branch_b = keras.layers.Conv1D(int(128), 3,activation='relu',strides=2)(branch_b)
+
+   branch_c = keras.layers.AveragePooling1D(3,strides=2)(x)
+   branch_c = keras.layers.Conv1D(int(128), 3,activation='relu')(branch_c)
+
+   branch_d = keras.layers.Conv1D(int(128), 1,activation='relu')(x)
+   branch_d = keras.layers.Conv1D(int(128), 3,activation='relu')(branch_d)
+   branch_d = keras.layers.Conv1D(int(128), 3,activation='relu',strides=2)(branch_d)
+
+   out = keras.layers.concatenate([branch_a,branch_b,branch_c,branch_d],axis=1)
+   return out
+def audioencoder2(x):
+   
+   out_neurons = x.shape.as_list()[-1]
+
+   a = x[:,0:5000,:]
+   b = x[:,5000:10000,:]
+   c = x[:,10000:15000,:]
+   d = x[:,15000:20000,:]
+   print('Out Neurons '+str(out_neurons))
+   
+   
+   #x = keras.layers.Conv1D(features, 7, strides=2, use_bias=False, name="conv1")(x)
+
+   branch_a = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False, activation='relu')(a)
+   #branch_a = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_a)
+   #branch_a = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_a)
+
+   branch_b = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False, activation='relu')(b)
+   #branch_b = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_b)
+   #branch_b = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_b)
+
+   branch_c = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False,activation='relu')(c)
+   #branch_c = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_c)
+   #branch_c = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_c)
+
+   branch_d = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False,activation='relu')(d)
+   #branch_d = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_d)
+   #branch_d = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_d)
+ 
+   out = keras.layers.concatenate([branch_a,branch_b,branch_c,branch_d],axis=1)
+   return out
+
+def audioencoder(model):
+   
+   out_neurons = model.shape.as_list()[-1]
+   print('Out shape '+str(model.shape))
+   print('out neuron '+str(out_neurons))
+   x = keras.layers.Conv1D(int(out_neurons*1.0),2, activation='relu', padding='valid')(model)
+   x = keras.layers.Dropout(0.5)(x)
+   #x = keras.layers.Conv1D(int(out_neurons*0.5),2, activation='relu', padding='valid')(x)
+   
+   #x = keras.layers.MaxPooling1D(3, strides=2, padding="same")(x)
+   return x
+        
 
 class ResNet1D(keras.Model):
     """
@@ -65,22 +128,21 @@ class ResNet1D(keras.Model):
         *args,
         **kwargs
     ):
-        if keras.backend.image_data_format() == "channels_last":
-            axis = 3
-        else:
-            axis = 1
+        axis = 1
 
         if numerical_names is None:
             numerical_names = [True] * len(blocks)
-
+        
+        
+        features = 64#int(20000*0.05)
+        
         x = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")(inputs)
-        x = keras.layers.Conv1D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1")(x)
-        x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
+        #x = keras.layers.Lambda(audioencoder2_,name='audioconv')(x)
+        x = keras.layers.SeparableConv1D(features, 7, strides=2, use_bias=False, name="conv1")(x)
+        x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn)(x)
         x = keras.layers.Activation("relu", name="conv1_relu")(x)
-        x = keras.layers.MaxPooling1D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
-
-        features = 64
-
+        
+        x = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")(x)
         outputs = []
 
         for stage_id, iterations in enumerate(blocks):
@@ -94,19 +156,31 @@ class ResNet1D(keras.Model):
                 )(x)
 
             features *= 2
-
+  
             outputs.append(x)
 
         if include_top:
             assert classes > 0
 
+            #x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
+            #x = Lambda( lambda v: tf.signal.stft(v,frame_length=1024,frame_step=256,fft_length=1024,), name='gen/FFTLayer')(x)
+            #real = Lambda(tf.real)(x)
+            #imag = Lambda(tf.imag)(x)
+            #x = Lambda(lambda x: tf.complex(x[0], x[1]))([real, imag])
+
+            #x = keras.layers.GlobalAveragePooling1D(name="pool6x")(x)
+            #x = keras.layers.Lambda(audioencoder2,name='audioconv-end')(x)
             x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
+            #x = keras.layers.Flatten()(x)
             x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
 
             super(ResNet1D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
         else:
+            x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
+            x = keras.layers.Dense(1, activation='linear', name="regressor")(x)
+
             # Else output each stages features
-            super(ResNet1D, self).__init__(inputs=inputs, outputs=outputs, *args, **kwargs)
+            super(ResNet1D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
 
 
 class ResNet1D18(ResNet1D):
