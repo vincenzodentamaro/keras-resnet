@@ -73,7 +73,7 @@ def basic_1d(
             name="padding{}{}_branch2a".format(stage_char, block_char)
         )(x)
         
-        y = keras.layers.Conv1D(
+        y = keras.layers.SeparableConv1D(
             filters,
             kernel_size,
             strides=stride,
@@ -99,7 +99,7 @@ def basic_1d(
             name="padding{}{}_branch2b".format(stage_char, block_char)
         )(y)
         
-        y = keras.layers.Conv1D(
+        y = keras.layers.SeparableConv1D(
             filters,
             kernel_size,
             use_bias=False,
@@ -115,7 +115,7 @@ def basic_1d(
         )(y)
 
         if block == 0:
-            shortcut = keras.layers.Conv1D(
+            shortcut = keras.layers.SeparableConv1D(
                 filters,
                 1,
                 strides=stride,
@@ -195,7 +195,7 @@ def bottleneck_1d(
     stage_char = str(stage + 2)
 
     def f(x):
-        y = keras.layers.Conv1D(
+        y = keras.layers.SeparableConv1D(
             filters,
             1,
             strides=stride,
@@ -221,7 +221,7 @@ def bottleneck_1d(
             name="padding{}{}_branch2b".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Conv1D(
+        y = keras.layers.SeparableConv1D(
             filters,
             kernel_size,
             use_bias=False,
@@ -241,7 +241,7 @@ def bottleneck_1d(
             name="res{}{}_branch2b_relu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Conv1D(
+        y = keras.layers.SeparableConv1D(
             filters * 4,
             1,
             use_bias=False,
@@ -257,7 +257,7 @@ def bottleneck_1d(
         )(y)
 
         if block == 0:
-            shortcut = keras.layers.Conv1D(
+            shortcut = keras.layers.SeparableConv1D(
                 filters * 4,
                 1,
                 strides=stride,
