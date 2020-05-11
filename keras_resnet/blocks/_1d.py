@@ -11,6 +11,7 @@ import keras.layers
 import keras.regularizers
 
 import keras_resnet.layers
+from keras.layers.advanced_activations import PReLU
 
 parameters = {
     "kernel_initializer": "he_normal"
@@ -89,8 +90,7 @@ def basic_1d(
             name="bn{}{}_branch2a".format(stage_char, block_char)
         )(y)
         
-        y = keras.layers.Activation(
-            "prelu",
+        y = PReLU(
             name="res{}{}_branch2a_prelu".format(stage_char, block_char)
         )(y)
 
@@ -137,8 +137,7 @@ def basic_1d(
             name="res{}{}".format(stage_char, block_char)
         )([y, shortcut])
         
-        y = keras.layers.Activation(
-            "prelu",
+        y = PReLU(
             name="res{}{}_prelu".format(stage_char, block_char)
         )(y)
 
@@ -211,8 +210,7 @@ def bottleneck_1d(
             name="bn{}{}_branch2a".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Activation(
-            "prelu",
+        y = PReLU(
             name="res{}{}_branch2a_prelu".format(stage_char, block_char)
         )(y)
 
@@ -236,8 +234,7 @@ def bottleneck_1d(
             name="bn{}{}_branch2b".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.Activation(
-            "prelu",
+        y = PReLU(
             name="res{}{}_branch2b_prelu".format(stage_char, block_char)
         )(y)
 
@@ -279,8 +276,7 @@ def bottleneck_1d(
             name="res{}{}".format(stage_char, block_char)
         )([y, shortcut])
 
-        y = keras.layers.Activation(
-            "prelu",
+        y = PReLU(
             name="res{}{}_prelu".format(stage_char, block_char)
         )(y)
 
