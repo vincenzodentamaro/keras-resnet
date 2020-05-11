@@ -90,8 +90,8 @@ def basic_1d(
         )(y)
         
         y = keras.layers.Activation(
-            "softplus",
-            name="res{}{}_branch2a_softplus".format(stage_char, block_char)
+            "relu",
+            name="res{}{}_branch2a_relu".format(stage_char, block_char)
         )(y)
 
         y = keras.layers.ZeroPadding1D(
@@ -138,8 +138,8 @@ def basic_1d(
         )([y, shortcut])
         
         y = keras.layers.Activation(
-            "softplus",
-            name="res{}{}_softplus".format(stage_char, block_char)
+            "relu",
+            name="res{}{}_relu".format(stage_char, block_char)
         )(y)
 
         return y
@@ -212,8 +212,8 @@ def bottleneck_1d(
         )(y)
 
         y = keras.layers.Activation(
-            "softplus",
-            name="res{}{}_branch2a_softplus".format(stage_char, block_char)
+            "relu",
+            name="res{}{}_branch2a_relu".format(stage_char, block_char)
         )(y)
 
         y = keras.layers.ZeroPadding1D(
@@ -237,8 +237,8 @@ def bottleneck_1d(
         )(y)
 
         y = keras.layers.Activation(
-            "softplus",
-            name="res{}{}_branch2b_softplus".format(stage_char, block_char)
+            "relu",
+            name="res{}{}_branch2b_relu".format(stage_char, block_char)
         )(y)
 
         y = keras.layers.SeparableConv1D(
@@ -280,8 +280,8 @@ def bottleneck_1d(
         )([y, shortcut])
 
         y = keras.layers.Activation(
-            "softplus",
-            name="res{}{}_softplus".format(stage_char, block_char)
+            "relu",
+            name="res{}{}_relu".format(stage_char, block_char)
         )(y)
 
         return y
