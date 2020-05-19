@@ -74,11 +74,11 @@ def basic_1d(
             name="padding{}{}_branch2a".format(stage_char, block_char)
         )(x)
         
-        y = keras.layers.SeparableConv1D(
+        y = keras.layers.Conv1D(
             filters,
             kernel_size,
             strides=stride,
-            use_bias=False,
+            use_bias=False, padding="causal", dilation_rate=2**1,
             name="res{}{}_branch2a".format(stage_char, block_char),
             **parameters
         )(y)
@@ -194,11 +194,11 @@ def bottleneck_1d(
     stage_char = str(stage + 2)
 
     def f(x):
-        y = keras.layers.SeparableConv1D(
+        y = keras.layers.Conv1D(
             filters,
             1,
             strides=stride,
-            use_bias=False,
+            use_bias=False, padding="causal", dilation_rate=2**1,
             name="res{}{}_branch2a".format(stage_char, block_char),
             **parameters
         )(x)
@@ -219,10 +219,10 @@ def bottleneck_1d(
             name="padding{}{}_branch2b".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.SeparableConv1D(
+        y = keras.layers.Conv1D(
             filters,
             kernel_size,
-            use_bias=False,
+            use_bias=False, padding="causal", dilation_rate=2**2
             name="res{}{}_branch2b".format(stage_char, block_char),
             **parameters
         )(y)
