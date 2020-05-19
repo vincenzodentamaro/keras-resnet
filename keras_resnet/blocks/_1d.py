@@ -222,7 +222,7 @@ def bottleneck_1d(
         y = keras.layers.Conv1D(
             filters,
             kernel_size,
-            use_bias=False, padding="causal", dilation_rate=2**1
+            use_bias=False, padding="causal", dilation_rate=2**1,
             name="res{}{}_branch2b".format(stage_char, block_char),
             **parameters
         )(y)
@@ -241,7 +241,7 @@ def bottleneck_1d(
         y = keras.layers.Conv1D(
             filters * 4,
             1,
-            use_bias=False, padding="causal", dilation_rate=2**2
+            use_bias=False, padding="causal", dilation_rate=2**2,
             name="res{}{}_branch2c".format(stage_char, block_char),
             **parameters
         )(y)
