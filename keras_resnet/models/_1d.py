@@ -8,31 +8,31 @@ keras_resnet.models._1d
 This module implements popular one-dimensional residual models.
 """
 
-import keras.backend
-import keras.layers
-import keras.models
-import keras.regularizers
+import tensorflow.keras.backend
+import tensorflow.keras.layers
+import tensorflow.keras.models
+import tensorflow.keras.regularizers
 import tensorflow as tf
 import keras_resnet.layers
-from keras.layers.core import Lambda
+from tensorflow.keras.layers.core import Lambda
 def audioencoder2_(x):
    
    out_neurons = x.shape.as_list()[-1]
 
    print('Out Neurons '+str(out_neurons))
-   branch_a = keras.layers.Conv1D(int(128), 1,activation='relu',strides=2)(x)
+   branch_a = tensorflow.keras.layers.Conv1D(int(128), 1,activation='relu',strides=2)(x)
    
-   branch_b = keras.layers.Conv1D(int(128), 1,activation='relu')(x)
-   branch_b = keras.layers.Conv1D(int(128), 3,activation='relu',strides=2)(branch_b)
+   branch_b = tensorflow.keras.layers.Conv1D(int(128), 1,activation='relu')(x)
+   branch_b = tensorflow.keras.layers.Conv1D(int(128), 3,activation='relu',strides=2)(branch_b)
 
-   branch_c = keras.layers.AveragePooling1D(3,strides=2)(x)
-   branch_c = keras.layers.Conv1D(int(128), 3,activation='relu')(branch_c)
+   branch_c = tensorflow.keras.layers.AveragePooling1D(3,strides=2)(x)
+   branch_c = tensorflow.keras.layers.Conv1D(int(128), 3,activation='relu')(branch_c)
 
-   branch_d = keras.layers.Conv1D(int(128), 1,activation='relu')(x)
-   branch_d = keras.layers.Conv1D(int(128), 3,activation='relu')(branch_d)
-   branch_d = keras.layers.Conv1D(int(128), 3,activation='relu',strides=2)(branch_d)
+   branch_d = tensorflow.keras.layers.Conv1D(int(128), 1,activation='relu')(x)
+   branch_d = tensorflow.keras.layers.Conv1D(int(128), 3,activation='relu')(branch_d)
+   branch_d = tensorflow.keras.layers.Conv1D(int(128), 3,activation='relu',strides=2)(branch_d)
 
-   out = keras.layers.concatenate([branch_a,branch_b,branch_c,branch_d],axis=1)
+   out = tensorflow.keras.layers.concatenate([branch_a,branch_b,branch_c,branch_d],axis=1)
    return out
 def audioencoder2(x):
    
@@ -45,25 +45,25 @@ def audioencoder2(x):
    print('Out Neurons '+str(out_neurons))
    
    
-   #x = keras.layers.Conv1D(features, 7, strides=2, use_bias=False, name="conv1")(x)
+   #x = tensorflow.keras.layers.Conv1D(features, 7, strides=2, use_bias=False, name="conv1")(x)
 
-   branch_a = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False, activation='relu')(a)
-   #branch_a = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_a)
-   #branch_a = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_a)
+   branch_a = tensorflow.keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False, activation='relu')(a)
+   #branch_a = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_a)
+   #branch_a = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_a)
 
-   branch_b = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False, activation='relu')(b)
-   #branch_b = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_b)
-   #branch_b = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_b)
+   branch_b = tensorflow.keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False, activation='relu')(b)
+   #branch_b = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_b)
+   #branch_b = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_b)
 
-   branch_c = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False,activation='relu')(c)
-   #branch_c = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_c)
-   #branch_c = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_c)
+   branch_c = tensorflow.keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False,activation='relu')(c)
+   #branch_c = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_c)
+   #branch_c = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_c)
 
-   branch_d = keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False,activation='relu')(d)
-   #branch_d = keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_d)
-   #branch_d = keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_d)
+   branch_d = tensorflow.keras.layers.Conv1D(int(16), 7, strides=2, use_bias=False,activation='relu')(d)
+   #branch_d = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu')(branch_d)
+   #branch_d = tensorflow.keras.layers.SeparableConv1D(int(32), 3,activation='relu',strides=2)(branch_d)
  
-   out = keras.layers.concatenate([branch_a,branch_b,branch_c,branch_d],axis=1)
+   out = tensorflow.keras.layers.concatenate([branch_a,branch_b,branch_c,branch_d],axis=1)
    return out
 
 def audioencoder(model):
@@ -71,19 +71,19 @@ def audioencoder(model):
    out_neurons = model.shape.as_list()[-1]
    print('Out shape '+str(model.shape))
    print('out neuron '+str(out_neurons))
-   x = keras.layers.Conv1D(int(out_neurons*1.0),2, activation='relu', padding='valid')(model)
-   x = keras.layers.Dropout(0.5)(x)
-   #x = keras.layers.Conv1D(int(out_neurons*0.5),2, activation='relu', padding='valid')(x)
+   x = tensorflow.keras.layers.Conv1D(int(out_neurons*1.0),2, activation='relu', padding='valid')(model)
+   x = tensorflow.keras.layers.Dropout(0.5)(x)
+   #x = tensorflow.keras.layers.Conv1D(int(out_neurons*0.5),2, activation='relu', padding='valid')(x)
    
-   #x = keras.layers.MaxPooling1D(3, strides=2, padding="same")(x)
+   #x = tensorflow.keras.layers.MaxPooling1D(3, strides=2, padding="same")(x)
    return x
         
 
-class ResNet1D(keras.Model):
+class ResNet1D(tensorflow.keras.Model):
     """
-    Constructs a `keras.models.Model` object using the given block count.
+    Constructs a `tensorflow.keras.models.Model` object using the given block count.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -106,7 +106,7 @@ class ResNet1D(keras.Model):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+        >>> x = tensorflow.keras.layers.Input(shape)
 
         >>> blocks = [2, 2, 2, 2]
 
@@ -136,13 +136,13 @@ class ResNet1D(keras.Model):
         
         features = 64#int(20000*0.05)
         
-        x = keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")(inputs)
-        #x = keras.layers.Lambda(audioencoder2_,name='audioconv')(x)
-        x = keras.layers.SeparableConv1D(features, 7, strides=2, use_bias=False, name="conv1")(x)
+        x = tensorflow.keras.layers.ZeroPadding1D(padding=3, name="padding_conv1")(inputs)
+        #x = tensorflow.keras.layers.Lambda(audioencoder2_,name='audioconv')(x)
+        x = tensorflow.keras.layers.SeparableConv1D(features, 7, strides=2, use_bias=False, name="conv1")(x)
         x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn)(x)
-        x = keras.layers.Activation("relu", name="conv1_relu")(x)
+        x = tensorflow.keras.layers.Activation("relu", name="conv1_relu")(x)
         
-        x = keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")(x)
+        x = tensorflow.keras.layers.MaxPooling1D(3, strides=2, padding="same", name="pool1")(x)
         outputs = []
 
         for stage_id, iterations in enumerate(blocks):
@@ -162,22 +162,22 @@ class ResNet1D(keras.Model):
         if include_top:
             assert classes > 0
 
-            #x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
+            #x = tensorflow.keras.layers.GlobalAveragePooling1D(name="pool5")(x)
             #x = Lambda( lambda v: tf.signal.stft(v,frame_length=1024,frame_step=256,fft_length=1024,), name='gen/FFTLayer')(x)
             #real = Lambda(tf.real)(x)
             #imag = Lambda(tf.imag)(x)
             #x = Lambda(lambda x: tf.complex(x[0], x[1]))([real, imag])
 
-            #x = keras.layers.GlobalAveragePooling1D(name="pool6x")(x)
-            #x = keras.layers.Lambda(audioencoder2,name='audioconv-end')(x)
-            x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
-            #x = keras.layers.Flatten()(x)
-            x = keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
+            #x = tensorflow.keras.layers.GlobalAveragePooling1D(name="pool6x")(x)
+            #x = tensorflow.keras.layers.Lambda(audioencoder2,name='audioconv-end')(x)
+            x = tensorflow.keras.layers.GlobalAveragePooling1D(name="pool5")(x)
+            #x = tensorflow.keras.layers.Flatten()(x)
+            x = tensorflow.keras.layers.Dense(classes, activation="softmax", name="fc1000")(x)
 
             super(ResNet1D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
         else:
-            x = keras.layers.GlobalAveragePooling1D(name="pool5")(x)
-            x = keras.layers.Dense(1, activation='linear', name="regressor")(x)
+            x = tensorflow.keras.layers.GlobalAveragePooling1D(name="pool5")(x)
+            x = tensorflow.keras.layers.Dense(1, activation='linear', name="regressor")(x)
 
             # Else output each stages features
             super(ResNet1D, self).__init__(inputs=inputs, outputs=x, *args, **kwargs)
@@ -185,9 +185,9 @@ class ResNet1D(keras.Model):
 
 class ResNet1D18(ResNet1D):
     """
-    Constructs a `keras.models.Model` according to the ResNet18 specifications.
+    Constructs a `tensorflow.keras.models.Model` according to the ResNet18 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -205,7 +205,7 @@ class ResNet1D18(ResNet1D):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+        >>> x = tensorflow.keras.layers.Input(shape)
 
         >>> model = keras_resnet.models.ResNet18(x, classes=classes)
 
@@ -229,9 +229,9 @@ class ResNet1D18(ResNet1D):
 
 class ResNet1D34(ResNet1D):
     """
-    Constructs a `keras.models.Model` according to the ResNet34 specifications.
+    Constructs a `tensorflow.keras.models.Model` according to the ResNet34 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -249,7 +249,7 @@ class ResNet1D34(ResNet1D):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+        >>> x = tensorflow.keras.layers.Input(shape)
 
         >>> model = keras_resnet.models.ResNet34(x, classes=classes)
 
@@ -273,9 +273,9 @@ class ResNet1D34(ResNet1D):
 
 class ResNet1D50(ResNet1D):
     """
-    Constructs a `keras.models.Model` according to the ResNet50 specifications.
+    Constructs a `tensorflow.keras.models.Model` according to the ResNet50 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -293,7 +293,7 @@ class ResNet1D50(ResNet1D):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+        >>> x = tensorflow.keras.layers.Input(shape)
 
         >>> model = keras_resnet.models.ResNet50(x)
 
@@ -320,9 +320,9 @@ class ResNet1D50(ResNet1D):
 
 class ResNet1D101(ResNet1D):
     """
-    Constructs a `keras.models.Model` according to the ResNet101 specifications.
+    Constructs a `tensorflow.keras.models.Model` according to the ResNet101 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -340,7 +340,7 @@ class ResNet1D101(ResNet1D):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+        >>> x = tensorflow.keras.layers.Input(shape)
 
         >>> model = keras_resnet.models.ResNet101(x, classes=classes)
 
@@ -367,9 +367,9 @@ class ResNet1D101(ResNet1D):
 
 class ResNet1D152(ResNet1D):
     """
-    Constructs a `keras.models.Model` according to the ResNet152 specifications.
+    Constructs a `tensorflow.keras.models.Model` according to the ResNet152 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -387,7 +387,7 @@ class ResNet1D152(ResNet1D):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+        >>> x = tensorflow.keras.layers.Input(shape)
 
         >>> model = keras_resnet.models.ResNet152(x, classes=classes)
 
@@ -414,9 +414,9 @@ class ResNet1D152(ResNet1D):
 
 class ResNet1D200(ResNet1D):
     """
-    Constructs a `keras.models.Model` according to the ResNet200 specifications.
+    Constructs a `tensorflow.keras.models.Model` according to the ResNet200 specifications.
 
-    :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
+    :param inputs: input tensor (e.g. an instance of `tensorflow.keras.layers.Input`)
 
     :param blocks: the network’s residual architecture
 
@@ -434,7 +434,7 @@ class ResNet1D200(ResNet1D):
 
         >>> shape, classes = (224, 224, 3), 1000
 
-        >>> x = keras.layers.Input(shape)
+        >>> x = tensorflow.keras.layers.Input(shape)
 
         >>> model = keras_resnet.models.ResNet200(x, classes=classes)
 

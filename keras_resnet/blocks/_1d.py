@@ -7,11 +7,11 @@ keras_resnet.blocks._1d
 This module implements a number of popular one-dimensional residual blocks.
 """
 
-import keras.layers
-import keras.regularizers
+import tensorflow.keras.layers
+import tensorflow.keras.regularizers
 
 import keras_resnet.layers
-from keras.layers.advanced_activations import PReLU
+from tensorflow.keras.layers.advanced_activations import PReLU
 
 parameters = {
     "kernel_initializer": "he_normal"
@@ -56,7 +56,7 @@ def basic_1d(
         else:
             stride = 2
 
-    if keras.backend.image_data_format() == "channels_last":
+    if tensorflow.keras.backend.image_data_format() == "channels_last":
         axis = -1
     else:
         axis = 1
@@ -69,12 +69,12 @@ def basic_1d(
     stage_char = str(stage + 2)
 
     def f(x):
-        y = keras.layers.ZeroPadding1D(
+        y = tensorflow.keras.layers.ZeroPadding1D(
             padding=1, 
             name="padding{}{}_branch2a".format(stage_char, block_char)
         )(x)
         
-        y = keras.layers.SeparableConv1D(
+        y = tensorflow.keras.layers.SeparableConv1D(
             filters,
             kernel_size,
             strides=stride,
@@ -94,12 +94,12 @@ def basic_1d(
             name="res{}{}_branch2a_prelu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.ZeroPadding1D(
+        y = tensorflow.keras.layers.ZeroPadding1D(
             padding=1,
             name="padding{}{}_branch2b".format(stage_char, block_char)
         )(y)
         
-        y = keras.layers.SeparableConv1D(
+        y = tensorflow.keras.layers.SeparableConv1D(
             filters,
             kernel_size,
             use_bias=False,
@@ -115,7 +115,7 @@ def basic_1d(
         )(y)
 
         if block == 0:
-            shortcut = keras.layers.SeparableConv1D(
+            shortcut = tensorflow.keras.layers.SeparableConv1D(
                 filters,
                 1,
                 strides=stride,
@@ -133,7 +133,7 @@ def basic_1d(
         else:
             shortcut = x
 
-        y = keras.layers.Add(
+        y = tensorflow.keras.layers.Add(
             name="res{}{}".format(stage_char, block_char)
         )([y, shortcut])
         
@@ -181,7 +181,7 @@ def bottleneck_1d(
     if stride is None:
         stride = 1 if block != 0 or stage == 0 else 2
 
-    if keras.backend.image_data_format() == "channels_last":
+    if tensorflow.keras.backend.image_data_format() == "channels_last":
         axis = -1
     else:
         axis = 1
@@ -194,7 +194,7 @@ def bottleneck_1d(
     stage_char = str(stage + 2)
 
     def f(x):
-        y = keras.layers.SeparableConv1D(
+        y = tensorflow.keras.layers.SeparableConv1D(
             filters,
             1,
             strides=stride,
@@ -214,12 +214,12 @@ def bottleneck_1d(
             name="res{}{}_branch2a_prelu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.ZeroPadding1D(
+        y = tensorflow.keras.layers.ZeroPadding1D(
             padding=1,
             name="padding{}{}_branch2b".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.SeparableConv1D(
+        y = tensorflow.keras.layers.SeparableConv1D(
             filters,
             kernel_size,
             use_bias=False,
@@ -238,7 +238,7 @@ def bottleneck_1d(
             name="res{}{}_branch2b_prelu".format(stage_char, block_char)
         )(y)
 
-        y = keras.layers.SeparableConv1D(
+        y = tensorflow.keras.layers.SeparableConv1D(
             filters * 4,
             1,
             use_bias=False,
@@ -254,7 +254,7 @@ def bottleneck_1d(
         )(y)
 
         if block == 0:
-            shortcut = keras.layers.SeparableConv1D(
+            shortcut = tensorflow.keras.layers.SeparableConv1D(
                 filters * 4,
                 1,
                 strides=stride,
@@ -272,7 +272,7 @@ def bottleneck_1d(
         else:
             shortcut = x
 
-        y = keras.layers.Add(
+        y = tensorflow.keras.layers.Add(
             name="res{}{}".format(stage_char, block_char)
         )([y, shortcut])
 
