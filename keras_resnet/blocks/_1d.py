@@ -11,7 +11,7 @@ import tensorflow.keras.layers
 import tensorflow.keras.regularizers
 
 import keras_resnet.layers
-from tensorflow.keras.layers.advanced_activations import PReLU
+from tensorflow.keras.layers import PReLU
 
 parameters = {
     "kernel_initializer": "he_normal"
