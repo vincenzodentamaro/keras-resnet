@@ -14,7 +14,7 @@ import tensorflow.keras.models
 import tensorflow.keras.regularizers
 import tensorflow as tf
 import keras_resnet.layers
-from tensorflow.keras.layers.core import Lambda
+from tensorflow.keras.layers import Lambda
 def audioencoder2_(x):
    
    out_neurons = x.shape.as_list()[-1]
