@@ -75,7 +75,7 @@ def basic_2d(
 
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
 
-        y = ScaledSinusodialRepresentationDense(64,
+        y = ScaledSinusodialRepresentationDense(256,
                                         scale=1.5,          # scale value should be carefully chosen in range [1, 2]
                                         activation='sine', # default activation function
                                         w0=1.0, name="res{}{}_branch2a_siren".format(stage_char, block_char))(y)  
