@@ -8,8 +8,7 @@ This module implements a number of popular two-dimensional residual blocks.
 """
 
 import tensorflow.keras.layers
-import tensorflow.keras.regularizers
-from tf_siren import  ScaledSinusodialRepresentationDense
+import tensorflow.keras.regularizers 
 
 import keras_resnet.layers
 
