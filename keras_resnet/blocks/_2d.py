@@ -187,7 +187,7 @@ def bottleneck_2d(
         else:
             shortcut = x
         
-        y = tensorflow.keras.layers.Add(name="res{}{}".format(stage_char, block_char))(y])
+        y = tensorflow.keras.layers.Add(name="res{}{}".format(stage_char, block_char))([y, shortcut])
         y = ScaledSinusodialRepresentationDense(64,
                                         scale=1.5,          # scale value should be carefully chosen in range [1, 2]
                                         activation='sine', # default activation function
