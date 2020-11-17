@@ -75,11 +75,8 @@ def basic_2d(
 
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2a".format(stage_char, block_char))(y)
 
-        y = ScaledSinusodialRepresentationDense(256,
-                                        scale=1.5,          # scale value should be carefully chosen in range [1, 2]
-                                        activation='sine', # default activation function
-                                        w0=1.0, name="res{}{}_branch2a_siren".format(stage_char, block_char))(y)  
-        #y = tensorflow.keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
+         
+        y = tensorflow.keras.layers.Activation("relu", name="res{}{}_branch2a_relu".format(stage_char, block_char))(y)
 
         y = tensorflow.keras.layers.ZeroPadding2D(padding=1, name="padding{}{}_branch2b".format(stage_char, block_char))(y)
 
@@ -96,11 +93,8 @@ def basic_2d(
 
         
         y = tensorflow.keras.layers.Add(name="res{}{}".format(stage_char, block_char))([y, shortcut])
-        y = ScaledSinusodialRepresentationDense(64,
-                                        scale=1.5,          # scale value should be carefully chosen in range [1, 2]
-                                        activation='sine', # default activation function
-                                        w0=1.0,  name="res{}{}_siren".format(stage_char, block_char))(y)  
-        #y = tensorflow.keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
+         
+        y = tensorflow.keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
 
         return y
 
@@ -170,11 +164,8 @@ def bottleneck_2d(
 
         y = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn{}{}_branch2b".format(stage_char, block_char))(y)
 
-        y = ScaledSinusodialRepresentationDense(64,
-                                        scale=1.5,          # scale value should be carefully chosen in range [1, 2]
-                                        activation='sine', # default activation function
-                                        w0=1.0,  name="res{}{}_branch2b_siren".format(stage_char, block_char))(y) 
-        #y = tensorflow.keras.layers.Activation("relu", name="res{}{}_branch2b_relu".format(stage_char, block_char))(y)
+         
+        y = tensorflow.keras.layers.Activation("relu", name="res{}{}_branch2b_relu".format(stage_char, block_char))(y)
 
         y = tensorflow.keras.layers.SeparableConv2D(filters * 4, (1, 1), use_bias=False, name="res{}{}_branch2c".format(stage_char, block_char), **parameters)(y)
 
@@ -188,11 +179,8 @@ def bottleneck_2d(
             shortcut = x
         
         y = tensorflow.keras.layers.Add(name="res{}{}".format(stage_char, block_char))([y, shortcut])
-        y = ScaledSinusodialRepresentationDense(64,
-                                        scale=1.5,          # scale value should be carefully chosen in range [1, 2]
-                                        activation='sine', # default activation function
-                                        w0=1.0,  name="res{}{}_siren".format(stage_char, block_char))(y) 
-        #y = tensorflow.keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
+         
+        y = tensorflow.keras.layers.Activation("relu", name="res{}{}_relu".format(stage_char, block_char))(y)
 
         return y
 
