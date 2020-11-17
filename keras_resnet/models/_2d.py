@@ -13,8 +13,7 @@ import tensorflow.keras.models
 import tensorflow.keras.regularizers
 
 import keras_resnet.blocks
-import keras_resnet.layers
-from tf_siren import ScaledSinusodialRepresentationDense
+import keras_resnet.layers 
 
 
 class ResNet2D(tensorflow.keras.Model):
@@ -76,10 +75,7 @@ class ResNet2D(tensorflow.keras.Model):
 
         x = tensorflow.keras.layers.Conv2D(64, (7, 7), strides=(2, 2), use_bias=False, name="conv1", padding="same")(inputs)
         x = keras_resnet.layers.BatchNormalization(axis=axis, epsilon=1e-5, freeze=freeze_bn, name="bn_conv1")(x)
-        x = ScaledSinusodialRepresentationDense(32,
-                                        scale=1.5,          # scale value should be carefully chosen in range [1, 2]
-                                        activation='sine',name="conv1_siren", # default activation function
-                                        w0=1.0)(x)  
+        x = tensorflow.keras.layers.Activation("relu", name="conv1_relu")(x)
         
         x = tensorflow.keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
